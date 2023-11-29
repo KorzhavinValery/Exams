@@ -1,5 +1,7 @@
 package pro.sky.Exams.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pro.sky.Exams.model.Question;
@@ -15,9 +17,9 @@ public class ExamController {
     public ExamController(ExaminerService examinerService) {
         this.examinerService = examinerService;
     }
-
-    public Collection<Question> getQuestions(int amount) {
-        return null;
+@GetMapping("get/{amount}")
+    public Collection<Question> getQuestions(@PathVariable int amount) {
+        return examinerService.getQuestions(amount);
     }
 
 

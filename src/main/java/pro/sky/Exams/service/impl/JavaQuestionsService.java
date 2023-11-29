@@ -9,8 +9,9 @@ import java.util.*;
 
 @Service
 public class JavaQuestionsService implements QuestionsService {
-   private Set<Question> questions = new HashSet<>();
+    private Set<Question> questions = new HashSet<>();
     private final Random rnd = new Random();
+
 
     @Override
     public Question add(String question, String answer) {
