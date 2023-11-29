@@ -27,7 +27,7 @@ public class JavaQuestionsController {
 
     @GetMapping("remove")
     public Question removeQuestion(@RequestParam String question, String answer) {
-        return service.remove(new Question(answer, question));
+        return service.remove(new Question(question, answer));
     }
     public Collection<Question> getQuestions() {
 
