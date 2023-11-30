@@ -1,25 +1,24 @@
 package pro.sky.Exams.service.impl;
 
-import org.springframework.stereotype.Service;
 import pro.sky.Exams.exceptions.QuestionsNotFindException;
 import pro.sky.Exams.model.Question;
-import pro.sky.Exams.repositories.JavaQuestionRepository;
+import pro.sky.Exams.repositories.MathQuestionRepository;
 import pro.sky.Exams.service.QuestionsService;
 
 import java.util.*;
 
-@Service
-public class JavaQuestionsService implements QuestionsService {
-    private JavaQuestionRepository javaQuestionRepository;
+public class MathQuestionService implements QuestionsService {
+    private MathQuestionRepository mathQuestionRepository;
 
-    public JavaQuestionsService(JavaQuestionRepository javaQuestionRepository) {
-        this.javaQuestionRepository = javaQuestionRepository;
+
+    public MathQuestionService(MathQuestionRepository mathQuestionRepository) {
+        this.mathQuestionRepository = mathQuestionRepository;
     }
 
     @Override
     public Question add(String question, String answer) {
         Question questionExam = new Question(question, answer);
-        return javaQuestionRepository.add(questionExam);
+        return mathQuestionRepository.add(questionExam);
     }
 
 //    @Override
@@ -41,7 +40,7 @@ public class JavaQuestionsService implements QuestionsService {
 
     @Override
     public Question getRandomQuestion() {
-        Collection<Question> questions = javaQuestionRepository.getAll();
+        Collection<Question> questions = mathQuestionRepository.getAll();
         if (questions.isEmpty()) {
             throw new QuestionsNotFindException();
         }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pro.sky.Exams.exceptions.QuestionsNotFindException;
 import pro.sky.Exams.model.Question;
+import pro.sky.Exams.repositories.JavaQuestionRepository;
 import pro.sky.Exams.service.impl.JavaQuestionsService;
 
 import java.util.Collection;
@@ -14,18 +15,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JavaQuestionsServiceTest {
 
     private JavaQuestionsService out = new JavaQuestionsService();
-    private Question qstn = new Question("question", "answer");
+    private JavaQuestionRepository outRepository = new JavaQuestionRepository();
+
 
     @BeforeEach
     public void setUp() {
-        out = new JavaQuestionsService();
+        Question qstn = new Question("question", "answer");
+        Question qstn1 = new Question("question1", "answer1");
+        Question qstn2 = new Question("question2", "answer2");
     }
 
     @Test
     void shouldAddQuestion() {
         Question result = out.add(qstn.getQuestion(), qstn.getAnswer());
 
-        assertTrue(out.getAll().contains(qstn));
         assertEquals(qstn, result);
     }
 
