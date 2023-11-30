@@ -15,13 +15,11 @@ import java.util.Collection;
 @RequestMapping("exam/java")
 public class JavaQuestionsController {
     private final QuestionsService service;
-    private final JavaQuestionRepository javaQuestionRepository;
 
 
-    public JavaQuestionsController(QuestionsService service,
-                                   JavaQuestionRepository javaQuestionRepository) {
+    public JavaQuestionsController(@Qualifier("javaQuestionService")
+                                   QuestionsService service) {
         this.service = service;
-        this.javaQuestionRepository = javaQuestionRepository;
     }
 
     @GetMapping("add")
@@ -35,11 +33,11 @@ public class JavaQuestionsController {
     @GetMapping("remove")
     public Question removeQuestion(@RequestParam String question,
                                    @RequestParam String answer) {
-        return javaQuestionRepository.remove(new Question(question, answer));
+        return service.remove(new Question(question, answer));
     }
 
     public Collection<Question> getQuestions() {
 
-        return javaQuestionRepository.getAll();
+        return service.getAll();
     }
 }

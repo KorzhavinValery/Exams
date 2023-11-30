@@ -2,7 +2,7 @@ package pro.sky.Exams.model;
 
 import java.util.Objects;
 
-public class Question {
+public class Question implements Comparable<Question> {
     private String answer;
     private String question;
 
@@ -38,5 +38,10 @@ public class Question {
                 "answer='" + answer + '\'' +
                 ", question='" + question + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Question o) {
+        return (question + " " + answer).compareTo(o.getQuestion() + " " + o.getAnswer());
     }
 }

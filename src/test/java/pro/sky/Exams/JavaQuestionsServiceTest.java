@@ -1,70 +1,71 @@
 package pro.sky.Exams;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pro.sky.Exams.exceptions.QuestionsNotFindException;
+import pro.sky.Exams.exceptions.QuestionsRequestedException;
 import pro.sky.Exams.model.Question;
-import pro.sky.Exams.repositories.JavaQuestionRepository;
+import pro.sky.Exams.service.QuestionRepository;
 import pro.sky.Exams.service.impl.JavaQuestionsService;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class JavaQuestionsServiceTest {
-
-    private JavaQuestionsService out = new JavaQuestionsService();
-    private JavaQuestionRepository outRepository = new JavaQuestionRepository();
-
-
-    @BeforeEach
-    public void setUp() {
-        Question qstn = new Question("question", "answer");
-        Question qstn1 = new Question("question1", "answer1");
-        Question qstn2 = new Question("question2", "answer2");
-    }
+    @Mock
+    private QuestionRepository outRepository;
+    @InjectMocks
+    private JavaQuestionsService out;
 
     @Test
     void shouldAddQuestion() {
-        Question result = out.add(qstn.getQuestion(), qstn.getAnswer());
+        Question question = new Question("Вопрос", "Ответ");
+        when(outRepository.add(eq(question))).thenReturn(question);
+        assertEquals(question, out.add("Вопрос", "Ответ"));
+        //
 
-        assertEquals(qstn, result);
     }
 
     @Test
     void shouldRemoveQuestion() {
-
-        out.add(new Question(qstn.getQuestion(), qstn.getAnswer()));
-        Question result = out.remove(new Question(qstn.getQuestion(), qstn.getAnswer()));
-        assertFalse(out.getAll().contains(qstn));
-        assertEquals(qstn, result);
+        Question question = new Question("Вопрос", "Ответ");
+        when(outRepository.remove(eq(question))).thenReturn(question);
+        assertEquals(question, out.remove(question));
 
     }
 
     @Test
-    void shouldReturnAllQuestions() {
-        Question qstn1 = new Question("question1", "answer1");
-        out.add(qstn1);
-        out.add(qstn);
+    void shouldGetAll() {
+        Collection<Question> expected = List.of(
+                new Question("Вопрос1", "Ответ1"),
+                new Question("Вопрос2", "Ответ2"));
+        when(outRepository.getAll()).thenReturn(expected);
+        assertEquals(expected, out.getAll());
+        when(outRepository.getAll()).thenReturn(Collections.emptySet());
+        assertEquals(Collections.emptySet(), out.getAll());
+    }
 
-        Collection<Question> result = out.getAll();
 
-        assertTrue(result.containsAll(Set.of(qstn, qstn1)));
+    @Test
+    void shouldThrowExceptionWhenAlreadyAdded() {
+        Question question = new Question("Вопрос", "Ответ");
+        when(outRepository.add(eq(question))).thenThrow(QuestionsRequestedException.class);
+        assertThrows(QuestionsRequestedException.class, () -> out.add(question));
     }
 
     @Test
-    void shouldThrowQuestionsNotFindExceptionWhenCollectionIsEmpty() {
-        QuestionsNotFindException questionsNotFindException = assertThrows(QuestionsNotFindException.class,
-                () -> out.getRandomQuestion());
-    }
-
-    @Test
-    void shouldReturnRandomQuestion() {
-        out.add(qstn);
-
-        Question result = out.getRandomQuestion();
-        assertEquals(qstn, result);
-
+    void shouldThrowNotFindException() {
+        Question question = new Question("Вопрос", "Ответ");
+        when(outRepository.remove(eq(question))).thenThrow(QuestionsNotFindException.class);
+        assertThrows(QuestionsNotFindException.class, () -> out.remove(question));
     }
 }

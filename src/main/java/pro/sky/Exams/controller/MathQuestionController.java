@@ -1,10 +1,12 @@
 package pro.sky.Exams.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pro.sky.Exams.model.Question;
+import pro.sky.Exams.service.QuestionsService;
 import pro.sky.Exams.service.impl.MathQuestionService;
 
 import java.util.Collection;
@@ -12,27 +14,28 @@ import java.util.Collection;
 @RestController
 @RequestMapping("exam/math")
 public class MathQuestionController {
-    private final MathQuestionService mathQuestionService;
+    private final QuestionsService service;
 
 
-    public MathQuestionController(MathQuestionService mathQuestionService) {
-        this.mathQuestionService = mathQuestionService;
+    public MathQuestionController(@Qualifier("mathQuestionService")
+                                  QuestionsService service) {
+        this.service = service;
     }
-    @GetMapping(path = "/add")
+
+    @GetMapping(path = "add")
     public Question add(@RequestParam String question,
                         @RequestParam String answer) {
-        return mathQuestionService.add(question, answer);
+        return service.add(question, answer);
     }
 
-    @GetMapping(path = "/remove")
+    @GetMapping(path = "remove")
     public Question remove(@RequestParam String question,
                            @RequestParam String answer) {
-        Question fullQuestion = new Question(question, answer);
-        return fullQuestion;
+        return service.remove(new Question(question, answer));
     }
 
     @GetMapping
     public Collection<Question> getAll() {
-        return mathQuestionService.getAll();
+        return service.getAll();
     }
 }

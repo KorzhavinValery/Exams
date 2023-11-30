@@ -1,51 +1,54 @@
 package pro.sky.Exams.service.impl;
 
-import pro.sky.Exams.exceptions.QuestionsNotFindException;
+import org.springframework.stereotype.Service;
+import pro.sky.Exams.exceptions.MathQuestionRepositoryException;
 import pro.sky.Exams.model.Question;
-import pro.sky.Exams.repositories.MathQuestionRepository;
 import pro.sky.Exams.service.QuestionsService;
 
 import java.util.*;
 
+@Service
 public class MathQuestionService implements QuestionsService {
-    private MathQuestionRepository mathQuestionRepository;
+    private Random random = new Random();
 
-
-    public MathQuestionService(MathQuestionRepository mathQuestionRepository) {
-        this.mathQuestionRepository = mathQuestionRepository;
-    }
 
     @Override
     public Question add(String question, String answer) {
-        Question questionExam = new Question(question, answer);
-        return mathQuestionRepository.add(questionExam);
+        throw new MathQuestionRepositoryException();
     }
 
-//    @Override
-//    public Question add(Question question) {
-//        questions.add(question);
-//        return question;
-//    }
-//
-//    @Override
-//    public Question remove(Question question) {
-//        questions.remove(question);
-//        return question;
-//    }
-//
-//    @Override
-//    public Collection<Question> getAll() {
-//        return Collections.unmodifiableCollection(questions);
-//    }
+    @Override
+    public Question add(Question question) {
+        throw new MathQuestionRepositoryException();
+    }
+
+    @Override
+    public Question remove(Question question) {
+        throw new MathQuestionRepositoryException();
+    }
+
+    @Override
+    public Collection<Question> getAll() {
+        throw new MathQuestionRepositoryException();
+    }
 
     @Override
     public Question getRandomQuestion() {
-        Collection<Question> questions = mathQuestionRepository.getAll();
-        if (questions.isEmpty()) {
-            throw new QuestionsNotFindException();
-        }
-        Random randomQuestion = new Random();
-        int random = randomQuestion.nextInt(questions.size());
-        return (Question) questions.toArray()[random];
+        int first = random.nextInt(10);
+        int second = random.nextInt(9) + 1;
+        String[] actions = {" + ", " - ", " * ", " / "};
+
+        String action = actions[random.nextInt(4)];
+
+        int result = switch (action) {
+            case " + " -> first + second;
+            case " - " -> first - second;
+            case " * " -> first * second;
+            case " / " -> first / second;
+            default -> 0;
+        };
+        return new Question(
+                "Какой будет итог выражения " + first + action + second + " ?",
+                String.valueOf(result));
     }
 }

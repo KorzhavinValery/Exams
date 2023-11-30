@@ -4,44 +4,44 @@ import org.springframework.stereotype.Service;
 import pro.sky.Exams.exceptions.QuestionsNotFindException;
 import pro.sky.Exams.model.Question;
 import pro.sky.Exams.repositories.JavaQuestionRepository;
+import pro.sky.Exams.service.QuestionRepository;
 import pro.sky.Exams.service.QuestionsService;
 
 import java.util.*;
 
 @Service
 public class JavaQuestionsService implements QuestionsService {
-    private JavaQuestionRepository javaQuestionRepository;
+    private QuestionRepository questionRepository;
 
-    public JavaQuestionsService(JavaQuestionRepository javaQuestionRepository) {
-        this.javaQuestionRepository = javaQuestionRepository;
+    public JavaQuestionsService(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
     }
 
     @Override
     public Question add(String question, String answer) {
-        Question questionExam = new Question(question, answer);
-        return javaQuestionRepository.add(questionExam);
+        return questionRepository.add(new Question(question, answer));
     }
 
-//    @Override
-//    public Question add(Question question) {
-//        questions.add(question);
-//        return question;
-//    }
-//
-//    @Override
-//    public Question remove(Question question) {
-//        questions.remove(question);
-//        return question;
-//    }
-//
-//    @Override
-//    public Collection<Question> getAll() {
-//        return Collections.unmodifiableCollection(questions);
-//    }
+    @Override
+    public Question add(Question question) {
+        questionRepository.add(question);
+        return question;
+    }
+
+    @Override
+    public Question remove(Question question) {
+        questionRepository.remove(question);
+        return question;
+    }
+
+    @Override
+    public Collection<Question> getAll() {
+        return questionRepository.getAll();
+    }
 
     @Override
     public Question getRandomQuestion() {
-        Collection<Question> questions = javaQuestionRepository.getAll();
+        Collection<Question> questions = questionRepository.getAll();
         if (questions.isEmpty()) {
             throw new QuestionsNotFindException();
         }
